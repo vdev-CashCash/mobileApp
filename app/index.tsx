@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import LoginSignup from "@/components/Login";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
-    <View className="flex flex-1 justify-center items-center">
-      <Text className="text-blue-500 font-bold text-3xl">Test NativeWind</Text>
-    </View>
+    <SafeAreaView className="flex flex-1 justify-center items-center">
+      <LoginSignup />
+    </SafeAreaView>
   );
 }
