@@ -1,15 +1,14 @@
+import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import {
-    Alert,
-    Image,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
-
-const API_URL = "http://localhost:8080";
 
 const Login = async (matricule: string, password: string) => {
   const response = await fetch(`${API_URL}/auth/login`, {
