@@ -1,5 +1,6 @@
 import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -23,13 +24,14 @@ const Login = async (matricule: string, password: string) => {
 };
 
 const LoginSignup = () => {
+  const router = useRouter();
   const [useMatricule, setMatricule] = useState("");
   const [usePassword, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
       await Login(useMatricule, usePassword);
-      // navigation.navigate('MesFiches');
+      router.replace("/MesFiches");
       Alert.alert("Succès", "Connexion réussie !");
     } catch (error) {
       console.error("Error:", error);
