@@ -1,3 +1,4 @@
+import HeaderNav from "@/components/Header";
 import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
@@ -7,7 +8,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MesFiches() {
   const [LesFiches, setFiches] = useState([]);
-  const [matcheck, setmatcheck] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -47,9 +47,18 @@ export default function MesFiches() {
   }, []);
 
   return (
-    <SafeAreaView classname="flex flex-1 justify-center items-center">
+    <SafeAreaView classname="flex flex-1">
+      <HeaderNav />
       <View>
-        <Text>{LesFiches[0].numIntervention_vdev}</Text>
+        {LesFiches.length !== 0 ? (
+          LesFiches.map((fiche) => (
+            <Text key={fiche.numIntervention_vdev}>
+              {fiche.numIntervention_vdev}
+            </Text>
+          ))
+        ) : (
+          <Text>Pas de fiches affectées..</Text>
+        )}
       </View>
     </SafeAreaView>
   );
