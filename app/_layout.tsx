@@ -12,6 +12,14 @@ export default function RootLayout() {
       />
       <Stack.Screen name="Profil" options={{ headerShown: false }} />
       <Stack.Screen name="Statistiques" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="InterventionPreVisualisation/[numIntervention_vdev]"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="InterventionValidation"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

@@ -3,7 +3,7 @@ import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MesFiches() {
@@ -52,9 +52,16 @@ export default function MesFiches() {
       <View>
         {LesFiches.length !== 0 ? (
           LesFiches.map((fiche) => (
-            <Text key={fiche.numIntervention_vdev}>
-              {fiche.numIntervention_vdev}
-            </Text>
+            <TouchableOpacity
+              key={fiche.numIntervention_vdev}
+              onPress={() =>
+                router.replace(
+                  `/InterventionPreVisualisation/${fiche.numIntervention_vdev}`,
+                )
+              }
+            >
+              <Text>Fiche n°{fiche.numIntervention_vdev}</Text>
+            </TouchableOpacity>
           ))
         ) : (
           <Text>Pas de fiches affectées..</Text>
