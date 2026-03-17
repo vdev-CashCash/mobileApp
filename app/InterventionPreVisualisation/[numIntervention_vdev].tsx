@@ -1,15 +1,17 @@
+import ChangementInfosIntervention from "@/components/ChangementInfosIntervention";
 import HeaderNav from "@/components/Header";
+import SuppressionIntervention from "@/components/SuppressionIntervention";
 import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InterventionValidation from "../InterventionValidation";
@@ -125,7 +127,7 @@ export default function InterventionPreVisualisation() {
             </View>
           ))}
 
-          {isTechnicien && (
+          {isTechnicien ? (
             <TouchableOpacity
               className="mt-4 self-start bg-green-700 active:bg-green-950 py-2 px-4 rounded-full"
               onPress={() => setStep("2")}
@@ -135,6 +137,19 @@ export default function InterventionPreVisualisation() {
                 Terminer la fiche
               </Text>
             </TouchableOpacity>
+          ) : (
+            <View className="flex-1 flex-row justify-between">
+              {datas && <SuppressionIntervention datas={datas} />}
+
+              {datas && (
+                <ChangementInfosIntervention
+                  numIntervention_vdev={datas.numIntervention_vdev}
+                  dateVisite_vdev={datas.dateIntervention_vdev}
+                  heureVisite_vdev={datas.heureIntervention_vdev}
+                  matriculeEmploye_vdev={datas.matriculeTechnicien_vdev}
+                />
+              )}
+            </View>
           )}
         </View>
       </ScrollView>

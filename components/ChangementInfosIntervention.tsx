@@ -66,7 +66,7 @@ export default function ChangementInfosIntervention({
 
   return (
     <TouchableOpacity
-      className="bg-rose-700 active:bg-rose-950 py-2 px-4 rounded-full items-center"
+      className="bg-red-700 active:bg-red-950 py-2 px-4 rounded-full items-center"
       onPress={handleSetUpdate}
       activeOpacity={0.8}
       disabled={loading}

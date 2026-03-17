@@ -12,8 +12,8 @@ type InterventionData = {
   emplacement_vdev: string;
   telephone_vdev: string;
   adressePostale_vdev: string;
-  dureeDeplacement_vdev: string;
-  distanceAgenceClient_vdev: string;
+  dureeDeplacement_vdev: number;
+  distanceAgenceClient_vdev: number;
   mail_vdev: string;
   matriculeTechnicien_vdev: string;
   nom_vdev: string;
@@ -76,13 +76,13 @@ export default function SuppressionIntervention({ datas }: Props) {
 
   return (
     <TouchableOpacity
-      className="bg-rose-700 active:bg-rose-950 py-2 px-4 rounded-full items-center"
+      className="bg-red-700 active:bg-red-950 py-2 px-4 rounded-full items-center"
       onPress={deleteInterv}
       activeOpacity={0.8}
       disabled={loading}
     >
       <Text className="text-white font-semibold text-center">
-        {loading ? "Suppression..." : "Supprimer"}
+        {loading ? "Suppression..." : "Supprimer la fiche"}
       </Text>
     </TouchableOpacity>
   );

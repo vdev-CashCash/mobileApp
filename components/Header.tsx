@@ -6,7 +6,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { JSX } from "react/jsx-runtime";
 
-// ─── Icônes SVG ────────────────────────────────────────────────────────────────
 const IconFiches = ({ color }: { color: string }) => (
   <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
     <Rect
@@ -23,6 +22,43 @@ const IconFiches = ({ color }: { color: string }) => (
       stroke={color}
       strokeWidth="1.8"
       strokeLinecap="round"
+    />
+  </Svg>
+);
+
+const IconFicheEnCours = ({ color }: { color: string }) => (
+  <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
+    <Rect
+      x="4"
+      y="3"
+      width="13"
+      height="17"
+      rx="2"
+      stroke={color}
+      strokeWidth="1.8"
+    />
+    <Path d="M8 8h7" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
+    <Path d="M8 12h7" stroke={color} strokeWidth="1.8" strokeLinecap="round" />
+    <Path
+      d="M8 16h2.5"
+      stroke={color}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+    <Circle
+      cx="16"
+      cy="16"
+      r="3.5"
+      stroke={color}
+      strokeWidth="1.6"
+      fill="none"
+    />
+    <Path
+      d="M16 13.5v2.5l1.5 1.5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
   </Svg>
 );
@@ -73,6 +109,7 @@ type NavItem = {
   route: string;
   icon: (color: string) => JSX.Element;
   isAction?: boolean;
+  isTech?: boolean;
 };
 
 const NAV_ITEMS: NavItem[] = [
@@ -82,9 +119,10 @@ const NAV_ITEMS: NavItem[] = [
     icon: (c) => <IconFiches color={c} />,
   },
   {
-    label: "Statistiques",
-    route: "/Statistiques",
-    icon: (c) => <IconStats color={c} />,
+    label: "En Cours",
+    route: "/EnCours",
+    icon: (c) => <IconFicheEnCours color={c} />,
+    isTech: true,
   },
   {
     label: "+ Nouveau",
@@ -92,13 +130,21 @@ const NAV_ITEMS: NavItem[] = [
     icon: (c) => <IconPlus color={c} />,
     isAction: true,
   },
-  { label: "Profil", route: "/Profil", icon: (c) => <IconProfil color={c} /> },
+  {
+    label: "Statistiques",
+    route: "/Statistiques",
+    icon: (c) => <IconStats color={c} />,
+  },
+  {
+    label: "Profil",
+    route: "/Profil",
+    icon: (c) => <IconProfil color={c} />,
+  },
 ];
 
 const ICON_ACTIVE = "#C0392B";
 const ICON_INACTIVE = "#9CA3AF";
 
-// ─── Composant ─────────────────────────────────────────────────────────────────
 export default function HeaderNav() {
   const router = useRouter();
   const pathname = usePathname();
@@ -118,9 +164,9 @@ export default function HeaderNav() {
   }, []);
 
   // Filtre le bouton "+ Nouveau" si l'utilisateur n'est pas Gestionnaire
-  const visibleItems = NAV_ITEMS.filter(
-    (item) => !item.isAction || isGestionnaire,
-  );
+  const visibleItems = isGestionnaire
+    ? NAV_ITEMS.filter((item) => !item.isTech || item.isAction)
+    : NAV_ITEMS.filter((item) => item.isTech || !item.isAction);
 
   return (
     <View
@@ -163,14 +209,18 @@ export default function HeaderNav() {
         {visibleItems.map((item) => {
           const isActive = pathname === item.route;
 
-          if (item.isAction) {
+          if (item.isAction || item.isTech) {
             return (
               <TouchableOpacity
                 key={item.route}
                 className="flex-[1.4] mx-1"
                 onPress={() => router.replace(item.route as any)}
                 activeOpacity={0.75}
-                accessibilityLabel="Créer une nouvelle intervention"
+                accessibilityLabel={
+                  item.isAction
+                    ? "Créer une nouvelle intervention"
+                    : "Voir les fiches en cours"
+                }
               >
                 <View className="bg-red-700 rounded-xl py-2 items-center justify-center gap-1">
                   {item.icon("#FFFFFF")}

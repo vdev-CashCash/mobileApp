@@ -6,30 +6,35 @@ import { useEffect, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function MesFiches() {
-  const [LesFiches, setFiches] = useState([]);
+interface Fiche {
+  numIntervention_vdev: string;
+}
+
+export default function EnCours() {
+  const [LesFiches, setFiches] = useState<Fiche[]>([]);
   const router = useRouter();
 
   useEffect(() => {
     const fetchFiches = async () => {
       const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        alert("Token introuable. Reconnectez-vous");
+        router.replace("/");
+        return;
+      }
       const payload = JSON.parse(atob(token.split(".")[1]));
       const matricule = payload.sub;
-      const agence = payload.agence;
-      const role = payload.roles[0];
 
-      const lien =
-        role === "Technicien"
-          ? `${API_URL}/intervention/getFichesByMatricule/${matricule}`
-          : `${API_URL}/intervention/getFiches/${agence}`;
-
-      const response = await fetch(lien, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${API_URL}/intervention/getFichesByMatriculeNV/${matricule}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       if (response.status === 401) {
         alert(
@@ -51,7 +56,7 @@ export default function MesFiches() {
   }, []);
 
   return (
-    <SafeAreaView classname="flex flex-1">
+    <SafeAreaView className="flex flex-1">
       <HeaderNav />
       <View>
         {LesFiches.length !== 0 ? (

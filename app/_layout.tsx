@@ -20,6 +20,7 @@ export default function RootLayout() {
         name="InterventionValidation"
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="EnCours" options={{ headerShown: false }} />
     </Stack>
   );
 }
