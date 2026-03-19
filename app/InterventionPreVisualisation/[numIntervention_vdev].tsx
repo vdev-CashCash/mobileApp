@@ -56,6 +56,8 @@ export default function InterventionPreVisualisation() {
   const [datas, setDatas] = useState<InterventionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState<"1" | "2">("1");
+  const [commentaire, setCommentaire] = useState("");
+  const [tempsPasse, setTempsPasse] = useState(0);
   const [isTechnicien, setIsTechnicien] = useState(false);
 
   useEffect(() => {
@@ -86,6 +88,27 @@ export default function InterventionPreVisualisation() {
       const data = await res.json();
       setDatas(data);
       setLoading(false);
+
+      const resComTP = await fetch(
+        `${API_URL}/intervention/getCommentaireTP/${numIntervention_vdev}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      if (resComTP.status === 401) {
+        Alert.alert("Session expirée", "Veuillez vous reconnecter.", [
+          { text: "OK", onPress: () => router.replace("/") },
+        ]);
+        return;
+      }
+
+      const dataB = await resComTP.json();
+      setCommentaire(dataB.commentaire_vdev);
+      setTempsPasse(dataB.tempPasse_vdev);
     };
 
     load();
@@ -127,7 +150,20 @@ export default function InterventionPreVisualisation() {
             </View>
           ))}
 
-          {isTechnicien ? (
+          <View className="mb-4 border-b border-dotted border-slate-400 pb-2">
+            <Text className="text-slate-500 text-sm">Commentaire</Text>
+            <Text className="text-slate-800 text-base mt-0.5">
+              {commentaire ?? "-"}
+            </Text>
+          </View>
+          <View className="mb-4 border-b border-dotted border-slate-400 pb-2">
+            <Text className="text-slate-500 text-sm">Temps passé</Text>
+            <Text className="text-slate-800 text-base mt-0.5">
+              {tempsPasse ?? "-"} minutes
+            </Text>
+          </View>
+
+          {isTechnicien && commentaire === "" && tempsPasse === 0 && (
             <TouchableOpacity
               className="mt-4 self-start bg-green-700 active:bg-green-950 py-2 px-4 rounded-full"
               onPress={() => setStep("2")}
@@ -137,7 +173,8 @@ export default function InterventionPreVisualisation() {
                 Terminer la fiche
               </Text>
             </TouchableOpacity>
-          ) : (
+          )}
+          {!isTechnicien && (
             <View className="flex-1 flex-row justify-between">
               {datas && <SuppressionIntervention datas={datas} />}
 
