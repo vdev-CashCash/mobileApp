@@ -10,6 +10,7 @@ import {
   Alert,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -53,6 +54,9 @@ export default function InterventionPreVisualisation() {
   }>();
   const router = useRouter();
 
+  const [matriculeEmploye, setMatricule] = useState("");
+  const [dateIntervention, setDateIntervention] = useState("");
+  const [heureIntervention, setHeureIntervention] = useState("");
   const [datas, setDatas] = useState<InterventionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState<"1" | "2">("1");
@@ -87,6 +91,9 @@ export default function InterventionPreVisualisation() {
 
       const data = await res.json();
       setDatas(data);
+      setMatricule(data.matriculeTechnicien_vdev);
+      setHeureIntervention(data.heureIntervention_vdev);
+      setDateIntervention(data.dateIntervention_vdev);
       setLoading(false);
 
       const resComTP = await fetch(
@@ -138,17 +145,52 @@ export default function InterventionPreVisualisation() {
             Fiche intervention : Pré-visualisation
           </Text>
 
-          {FIELDS.map(({ label, key }) => (
-            <View
-              key={key}
-              className="mb-4 border-b border-dotted border-slate-400 pb-2"
-            >
-              <Text className="text-slate-500 text-sm">{label}</Text>
-              <Text className="text-slate-800 text-base mt-0.5">
-                {datas?.[key] ?? "-"}
-              </Text>
-            </View>
-          ))}
+          {FIELDS.map(({ label, key }) =>
+            !isTechnicien && key === "matriculeTechnicien_vdev" ? (
+              <View className="mb-3" key={key}>
+                <Text className="text-slate-500 text-xs mb-1">{label}</Text>
+                <TextInput
+                  className="border border-slate-300 rounded-lg px-3 py-2 text-slate-800 text-sm"
+                  placeholder="ex: 45"
+                  keyboardType="default"
+                  value={matriculeEmploye}
+                  onChangeText={setMatricule}
+                />
+              </View>
+            ) : !isTechnicien && key === "dateIntervention_vdev" ? (
+              <View className="mb-3" key={key}>
+                <Text className="text-slate-500 text-xs mb-1">{label}</Text>
+                <TextInput
+                  className="border border-slate-300 rounded-lg px-3 py-2 text-slate-800 text-sm"
+                  placeholder="YYYY-MM-DD"
+                  keyboardType="numbers-and-punctuation"
+                  value={dateIntervention}
+                  onChangeText={setDateIntervention}
+                />
+              </View>
+            ) : !isTechnicien && key === "heureIntervention_vdev" ? (
+              <View className="mb-3" key={key}>
+                <Text className="text-slate-500 text-xs mb-1">{label}</Text>
+                <TextInput
+                  className="border border-slate-300 rounded-lg px-3 py-2 text-slate-800 text-sm"
+                  placeholder="HH:MM"
+                  keyboardType="numbers-and-punctuation"
+                  value={heureIntervention}
+                  onChangeText={setHeureIntervention}
+                />
+              </View>
+            ) : (
+              <View
+                key={key}
+                className="mb-4 border-b border-dotted border-slate-400 pb-2"
+              >
+                <Text className="text-slate-500 text-sm">{label}</Text>
+                <Text className="text-slate-800 text-base mt-0.5">
+                  {datas?.[key] ?? "-"}
+                </Text>
+              </View>
+            ),
+          )}
 
           <View className="mb-4 border-b border-dotted border-slate-400 pb-2">
             <Text className="text-slate-500 text-sm">Commentaire</Text>
@@ -181,9 +223,9 @@ export default function InterventionPreVisualisation() {
               {datas && (
                 <ChangementInfosIntervention
                   numIntervention_vdev={datas.numIntervention_vdev}
-                  dateVisite_vdev={datas.dateIntervention_vdev}
-                  heureVisite_vdev={datas.heureIntervention_vdev}
-                  matriculeEmploye_vdev={datas.matriculeTechnicien_vdev}
+                  dateVisite_vdev={dateIntervention}
+                  heureVisite_vdev={heureIntervention}
+                  matriculeEmploye_vdev={matriculeEmploye}
                 />
               )}
             </View>
