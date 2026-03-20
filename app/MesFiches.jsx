@@ -3,12 +3,13 @@ import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MesFiches() {
   const [LesFiches, setFiches] = useState([]);
   const router = useRouter();
+  const [roleUtil, setRoleUtil] = useState("");
 
   useEffect(() => {
     const fetchFiches = async () => {
@@ -17,6 +18,7 @@ export default function MesFiches() {
       const matricule = payload.sub;
       const agence = payload.agence;
       const role = payload.roles[0];
+      setRoleUtil(role);
 
       const lien =
         role === "Technicien"
@@ -53,24 +55,42 @@ export default function MesFiches() {
   return (
     <SafeAreaView classname="flex flex-1">
       <HeaderNav />
-      <View>
+      <ScrollView>
         {LesFiches.length !== 0 ? (
           LesFiches.map((fiche) => (
-            <TouchableOpacity
+            <View
               key={fiche.numIntervention_vdev}
-              onPress={() =>
-                router.replace(
-                  `/InterventionPreVisualisation/${fiche.numIntervention_vdev}`,
-                )
-              }
+              className="w-full h-auto p-3 rounded border border-red-800 mb-4 m-1"
             >
-              <Text>Fiche n°{fiche.numIntervention_vdev}</Text>
-            </TouchableOpacity>
+              <View>
+                <Text className="mb-2">
+                  Intervention #{fiche.numIntervention_vdev}
+                </Text>
+                <Text>Client : {fiche.raisonSociale_vdev}</Text>
+                <View className="flex-1 flex-row gap-2">
+                  <Text>Date : {fiche.dateIntervention_vdev}</Text>
+                  <Text>Heure : {fiche.dateIntervention_vdev}</Text>
+                </View>
+                {roleUtil === "Gestionnaire" && (
+                  <Text>Employé : {fiche.dateIntervention_vdev}</Text>
+                )}
+              </View>
+              <TouchableOpacity
+                className="absolute right-0 mr-2 top-[50%] border border-red-500 bg-red-500 rounded-md p-2"
+                onPress={() =>
+                  router.replace(
+                    `/InterventionPreVisualisation/${fiche.numIntervention_vdev}`,
+                  )
+                }
+              >
+                <Text className="text-white">Voir</Text>
+              </TouchableOpacity>
+            </View>
           ))
         ) : (
           <Text>Pas de fiches affectées..</Text>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
