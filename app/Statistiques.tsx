@@ -1,3 +1,4 @@
+import HeaderNav from "@/components/Header";
 import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
@@ -9,6 +10,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   VictoryAxis,
   VictoryBar,
@@ -103,57 +105,26 @@ export default function Statistiques() {
       }))
     : [];
 
-  if (!datas)
+  if (!datas) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 40,
-        }}
-      >
-        <ActivityIndicator />
-        <Text>Chargement...</Text>
+      <View className="flex-1 bg-gray-100">
+        <HeaderNav />
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="#EF4444" />
+          <Text>Chargement...</Text>
+        </View>
       </View>
     );
+  }
 
   return (
-    <ScrollView
-      contentContainerStyle={{ alignItems: "center", padding: 24, gap: 32 }}
-    >
-      {role === "Technicien" && (
-        <View style={{ width: "100%", maxWidth: 480 }}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "500",
-              textAlign: "center",
-              marginBottom: 8,
-            }}
-          >
-            Mes statistiques
-          </Text>
-          <VictoryChart
-            theme={VictoryTheme.material}
-            domainPadding={40}
-            width={screenWidth - 48}
-          >
-            <VictoryAxis />
-            <VictoryAxis dependentAxis />
-            <VictoryBar
-              data={chartDataTechnicien}
-              style={{ data: { fill: "#185FA5" } }}
-              labels={({ datum }: { datum: { y: number } }) => datum.y}
-              labelComponent={<VictoryTooltip />}
-            />
-          </VictoryChart>
-        </View>
-      )}
-
-      {role !== "Technicien" && (
-        <>
-          <View style={{ width: "100%", maxWidth: 672 }}>
+    <SafeAreaView className="flex-1 bg-gray-100">
+      <HeaderNav />
+      <ScrollView
+        contentContainerStyle={{ alignItems: "center", padding: 24, gap: 32 }}
+      >
+        {role === "Technicien" && (
+          <View style={{ width: "100%", maxWidth: 480 }}>
             <Text
               style={{
                 fontSize: 16,
@@ -162,54 +133,85 @@ export default function Statistiques() {
                 marginBottom: 8,
               }}
             >
-              Interventions par technicien
+              Mes statistiques
             </Text>
             <VictoryChart
               theme={VictoryTheme.material}
-              domainPadding={30}
+              domainPadding={40}
               width={screenWidth - 48}
             >
-              <VictoryAxis
-                style={{ tickLabels: { angle: -30, fontSize: 10 } }}
-              />
+              <VictoryAxis />
               <VictoryAxis dependentAxis />
               <VictoryBar
-                data={chartDataManager}
+                data={chartDataTechnicien}
                 style={{ data: { fill: "#185FA5" } }}
+                labels={({ datum }: { datum: { y: number } }) => datum.y}
                 labelComponent={<VictoryTooltip />}
               />
             </VictoryChart>
           </View>
+        )}
 
-          <View style={{ width: "100%", maxWidth: 672 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "500",
-                textAlign: "center",
-                marginBottom: 8,
-              }}
-            >
-              Distance parcourue par technicien (km)
-            </Text>
-            <VictoryChart
-              theme={VictoryTheme.material}
-              domainPadding={30}
-              width={screenWidth - 48}
-            >
-              <VictoryAxis
-                style={{ tickLabels: { angle: -30, fontSize: 10 } }}
-              />
-              <VictoryAxis dependentAxis />
-              <VictoryBar
-                data={chartDataManagerDist}
-                style={{ data: { fill: "#3B6D11" } }}
-                labelComponent={<VictoryTooltip />}
-              />
-            </VictoryChart>
-          </View>
-        </>
-      )}
-    </ScrollView>
+        {role !== "Technicien" && (
+          <>
+            <View style={{ width: "100%", maxWidth: 672 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  marginBottom: 8,
+                }}
+              >
+                Interventions par technicien
+              </Text>
+              <VictoryChart
+                theme={VictoryTheme.material}
+                domainPadding={30}
+                width={screenWidth - 48}
+              >
+                <VictoryAxis
+                  style={{ tickLabels: { angle: -30, fontSize: 10 } }}
+                />
+                <VictoryAxis dependentAxis />
+                <VictoryBar
+                  data={chartDataManager}
+                  style={{ data: { fill: "#185FA5" } }}
+                  labelComponent={<VictoryTooltip />}
+                />
+              </VictoryChart>
+            </View>
+
+            <View style={{ width: "100%", maxWidth: 672 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  marginBottom: 8,
+                }}
+              >
+                Distance parcourue par technicien (km)
+              </Text>
+              <VictoryChart
+                theme={VictoryTheme.material}
+                domainPadding={30}
+                width={screenWidth - 48}
+              >
+                <VictoryAxis
+                  style={{ tickLabels: { angle: -30, fontSize: 10 } }}
+                />
+                <VictoryAxis dependentAxis />
+                <VictoryBar
+                  data={chartDataManagerDist}
+                  style={{ data: { fill: "#3B6D11" } }}
+                  labelComponent={<VictoryTooltip />}
+                />
+              </VictoryChart>
+            </View>
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
