@@ -1,3 +1,4 @@
+import { API_URL } from "@/config_connexion_api/conf-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -49,8 +50,8 @@ export default function Statistiques() {
 
       const lien =
         userRole === "Technicien"
-          ? `http://localhost:8080/intervention/getStatEmploye/${matricule}`
-          : `http://localhost:8080/intervention/getStats/${agence}`;
+          ? `${API_URL}/intervention/getStatEmploye/${matricule}`
+          : `${API_URL}/intervention/getStats/${agence}`;
 
       const response = await fetch(lien, {
         method: "GET",
